@@ -2,7 +2,7 @@ import { Button, SlideOver, StatusChip } from './ds';
 import { ChipStatus } from './ds/StatusChip';
 import { SOURCE_META, Source } from '../lib/data';
 
-export type ConnectionKey = 'gmail' | 'outlook' | 'teams' | 'fireflies';
+export type ConnectionKey = 'gmail' | 'outlook' | 'teams' | 'fireflies' | 'slack';
 export type ConnectionStatus = 'connected' | 'checking' | 'disconnected';
 
 export interface ConnectionState {
@@ -24,6 +24,7 @@ const CONNECTION_DEFS: { key: ConnectionKey; label: string; source: Source }[] =
   { key: 'outlook', label: 'Outlook', source: 'Outlook' },
   { key: 'teams', label: 'Teams', source: 'Teams' },
   { key: 'fireflies', label: 'Fireflies', source: 'Fireflies' },
+  { key: 'slack', label: 'Slack', source: 'Slack' },
 ];
 
 function chipStatusFor(status: ConnectionStatus): ChipStatus {

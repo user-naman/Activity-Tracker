@@ -2,7 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, KPICard, NavItem, SegmentedControl, Sidebar, StatusChip } from './components/ds';
 import { KanbanBoard } from './components/KanbanBoard';
 import { ConnectionsPanel, ConnectionKey, ConnectionsState } from './components/ConnectionsPanel';
-import { RadarItem, Status, countStatuses, makeItems } from './lib/data';
+import { ItemFormPanel, ItemFormValues } from './components/ItemFormPanel';
+import { RadarItem, Status, countStatuses, nextId } from './lib/data';
+import { buildConnectorItems } from './lib/connectors';
 
 type Mode = 'morning' | 'evening';
 
@@ -14,10 +16,22 @@ const MODE_OPTIONS = [
 ];
 
 const INITIAL_CONNECTIONS: ConnectionsState = {
-  gmail: { enabled: true, status: 'connected' },
+  gmail: { enabled: false, status: 'disconnected' },
   outlook: { enabled: true, status: 'connected' },
-  teams: { enabled: true, status: 'connected' },
+  teams: { enabled: false, status: 'disconnected' },
   fireflies: { enabled: false, status: 'disconnected' },
+  slack: { enabled: true, status: 'connected' },
+};
+
+const EMPTY_FORM_VALUES: ItemFormValues = {
+  priority: 'P2',
+  source: 'Outlook',
+  sender: '',
+  subject: '',
+  time: '',
+  status: 'todo',
+  reason: '',
+  carried: false,
 };
 
 function pluralize(count: number, noun: string): string {
@@ -39,11 +53,12 @@ function CheckIcon() {
 }
 
 export function App() {
-  const [items, setItems] = useState<RadarItem[]>(() => makeItems());
+  const [items, setItems] = useState<RadarItem[]>(() => buildConnectorItems());
   const [connections, setConnections] = useState<ConnectionsState>(INITIAL_CONNECTIONS);
   const [rechecking, setRechecking] = useState(false);
   const [mode, setMode] = useState<Mode>('morning');
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [activePanel, setActivePanel] = useState<'connections' | 'itemForm' | null>(null);
+  const [editingItem, setEditingItem] = useState<RadarItem | null>(null);
   const [pulseCol, setPulseCol] = useState<Status | null>(null);
 
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -112,6 +127,46 @@ export function App() {
       });
       setRechecking(false);
     }, 900);
+  };
+
+  const openCreateForm = () => {
+    setEditingItem(null);
+    setActivePanel('itemForm');
+  };
+
+  const openEditForm = (item: RadarItem) => {
+    setEditingItem(item);
+    setActivePanel('itemForm');
+  };
+
+  const closeForm = () => {
+    setActivePanel(null);
+    setEditingItem(null);
+  };
+
+  const saveItem = (values: ItemFormValues) => {
+    const reason = values.priority === 'P1' ? values.reason || undefined : undefined;
+
+    if (editingItem) {
+      const id = editingItem.id;
+      setItems((prev) =>
+        prev.map((i) => (i.id === id ? { ...i, ...values, reason } : i)),
+      );
+    } else {
+      setItems((prev) => {
+        const id = nextId(prev);
+        const newItem: RadarItem = { id, ...values, reason };
+        return [...prev, newItem];
+      });
+    }
+    closeForm();
+  };
+
+  const deleteItem = () => {
+    if (!editingItem) return;
+    const id = editingItem.id;
+    setItems((prev) => prev.filter((i) => i.id !== id));
+    closeForm();
   };
 
   const counts = countStatuses(items);
@@ -193,8 +248,14 @@ export function App() {
               value={mode}
               onChange={(id) => setMode(id as Mode)}
             />
-            <Button variant="secondary" onClick={() => setSettingsOpen((o) => !o)}>
+            <Button
+              variant="secondary"
+              onClick={() => setActivePanel((p) => (p === 'connections' ? null : 'connections'))}
+            >
               Connections
+            </Button>
+            <Button variant="primary" onClick={openCreateForm}>
+              New Item
             </Button>
           </div>
         </div>
@@ -239,25 +300,54 @@ export function App() {
             </div>
           ) : null}
 
-          <KanbanBoard items={items} onItemsChange={handleItemsChange} pulseCol={pulseCol} />
+          <KanbanBoard
+            items={items}
+            onItemsChange={handleItemsChange}
+            pulseCol={pulseCol}
+            onEditItem={openEditForm}
+          />
         </div>
       </div>
 
       <div
         style={{
-          width: settingsOpen ? '400px' : '0px',
+          width: activePanel ? '400px' : '0px',
           overflow: 'hidden',
           transition: 'var(--transition-sidebar)',
           flexShrink: 0,
           height: '100%',
         }}
       >
-        <ConnectionsPanel
-          connections={connections}
-          rechecking={rechecking}
-          onToggle={toggleConnection}
-          onRecheckAll={recheckAll}
-        />
+        {activePanel === 'connections' ? (
+          <ConnectionsPanel
+            connections={connections}
+            rechecking={rechecking}
+            onToggle={toggleConnection}
+            onRecheckAll={recheckAll}
+          />
+        ) : activePanel === 'itemForm' ? (
+          <ItemFormPanel
+            key={editingItem ? editingItem.id : 'create'}
+            mode={editingItem ? 'edit' : 'create'}
+            initialValues={
+              editingItem
+                ? {
+                    priority: editingItem.priority,
+                    source: editingItem.source,
+                    sender: editingItem.sender,
+                    subject: editingItem.subject,
+                    time: editingItem.time,
+                    status: editingItem.status,
+                    reason: editingItem.reason ?? '',
+                    carried: editingItem.carried ?? false,
+                  }
+                : EMPTY_FORM_VALUES
+            }
+            onSave={saveItem}
+            onCancel={closeForm}
+            onDelete={editingItem ? deleteItem : undefined}
+          />
+        ) : null}
       </div>
     </div>
   );

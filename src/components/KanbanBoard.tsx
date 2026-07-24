@@ -7,6 +7,7 @@ export interface KanbanBoardProps {
   items: RadarItem[];
   onItemsChange: (updater: (items: RadarItem[]) => RadarItem[]) => void;
   pulseCol: Status | null;
+  onEditItem: (item: RadarItem) => void;
 }
 
 const COLUMN_KEYS: Status[] = ['todo', 'inProgress', 'done'];
@@ -30,7 +31,7 @@ interface GrabPoint {
   y: number;
 }
 
-export function KanbanBoard({ items, onItemsChange, pulseCol }: KanbanBoardProps) {
+export function KanbanBoard({ items, onItemsChange, pulseCol, onEditItem }: KanbanBoardProps) {
   const [dragId, setDragId] = useState<number | null>(null);
   const [hoverCol, setHoverCol] = useState<Status | null>(null);
   const [dragX, setDragX] = useState(0);
@@ -163,6 +164,7 @@ export function KanbanBoard({ items, onItemsChange, pulseCol }: KanbanBoardProps
                     onPointerDown={(e) => handlePointerDown(item, colKey, e)}
                     onPointerMove={handlePointerMove}
                     onPointerUp={handlePointerUp}
+                    onEdit={onEditItem}
                   />
                 ))
               )}

@@ -8,3 +8,6 @@ export * from './EmptyState';
 export * from './Sidebar';
 export * from './NavItem';
 export * from './SlideOver';
+export * from './Input';
+export * from './Select';
+export * from './Field';

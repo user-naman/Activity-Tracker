@@ -1,0 +1,132 @@
+// Pulled 2026-07-24 from the Outlook inbox (last 24h) and Slack (messages in the last 24h,
+// from project channels or sent directly to me). Read-only. To refresh, re-run the pull and
+// replace the arrays below — nothing else needs to change.
+import { RawOutlookMessage, RawSlackMessage } from './types';
+
+export const RAW_OUTLOOK_MESSAGES: RawOutlookMessage[] = [
+  {
+    id: 1,
+    senderLabel: 'HR Team',
+    senderEmail: 'valoranthr@valorant.com',
+    subject: 'Action Required: Submit Your Investment Declaration by 27 July 2026',
+    receivedAtIso: '2026-07-24T09:07:50Z',
+    importanceHigh: false,
+  },
+  {
+    id: 2,
+    senderLabel: 'NVIDIA',
+    senderEmail: 'news@nvidia.com',
+    subject: 'Your Personalized Developer News from NVIDIA',
+    receivedAtIso: '2026-07-24T04:19:08Z',
+    importanceHigh: false,
+  },
+  {
+    id: 3,
+    senderLabel: 'Geetika Chanana',
+    senderEmail: 'notifications@linear.app',
+    subject: 'P0 Issues LSPD Sandbox — new comment on UAT-378',
+    receivedAtIso: '2026-07-24T02:33:23Z',
+    importanceHigh: false,
+    reasonIfP1: 'Geetika flagged this as a P0 issue on the LSPD Sandbox ticket — check the comment in Linear.',
+  },
+  {
+    id: 4,
+    senderLabel: 'Biju Mohan',
+    senderEmail: 'Biju.Mohan@valorant.com',
+    subject: 'Re: Mid-Year Promotion Announcements',
+    receivedAtIso: '2026-07-23T20:37:04Z',
+    importanceHigh: false,
+  },
+  {
+    id: 5,
+    senderLabel: 'Ian Cotter',
+    senderEmail: 'ian.cotter@valorant.com',
+    subject: 'Mid-Year Promotion Announcements',
+    receivedAtIso: '2026-07-23T20:33:15Z',
+    importanceHigh: false,
+  },
+  {
+    id: 6,
+    senderLabel: 'Linear',
+    senderEmail: 'changelog@updates.linear.app',
+    subject: 'Changelog: Text attribution and agent-assisted editing',
+    receivedAtIso: '2026-07-23T18:22:53Z',
+    importanceHigh: false,
+  },
+  {
+    id: 7,
+    senderLabel: 'Geetika Chanana',
+    senderEmail: 'Geetika.Chanana@valorant.com',
+    subject: 'Canceled: LSPD Astra Implementation Sync Call',
+    receivedAtIso: '2026-07-23T13:00:40Z',
+    importanceHigh: true,
+    reasonIfP1:
+      'Marked high importance — this LSPD/Astra client sync was just canceled; confirm whether it needs rescheduling.',
+  },
+  {
+    id: 8,
+    senderLabel: 'Linear',
+    senderEmail: 'notifications@linear.app',
+    subject: '2 unread notifications on Valorant Consulting',
+    receivedAtIso: '2026-07-23T11:29:05Z',
+    importanceHigh: false,
+  },
+  {
+    id: 9,
+    senderLabel: 'Niral Mehta',
+    senderEmail: 'Niral.Mehta@valorant.com',
+    subject: "Please attend tomorrow's AI Platforms training session",
+    receivedAtIso: '2026-07-23T10:20:01Z',
+    importanceHigh: false,
+  },
+  {
+    id: 10,
+    senderLabel: 'HR Admin',
+    senderEmail: 'hradmin@valorant.com',
+    subject: 'Declare IT saving investments — due on or before 27 Jul 2026',
+    receivedAtIso: '2026-07-23T09:36:07Z',
+    importanceHigh: false,
+  },
+  {
+    id: 11,
+    senderLabel: 'Health Quest',
+    senderEmail: 'no-reply@getvisitapp.com',
+    subject: 'Health Quest is almost here — get ready to participate',
+    receivedAtIso: '2026-07-23T08:37:08Z',
+    importanceHigh: false,
+  },
+  {
+    id: 12,
+    senderLabel: 'Google Cloud',
+    senderEmail: 'googlecloud@google.com',
+    subject: 'The New Way to Cloud: Operationalizing Enterprise AI',
+    receivedAtIso: '2026-07-23T06:54:05Z',
+    importanceHigh: false,
+  },
+  {
+    id: 13,
+    senderLabel: 'Calendar',
+    senderEmail: 'naman.jain@lightspeedhq.com',
+    subject: 'Canceled: LSPD Astra Deployment Progress Sync',
+    receivedAtIso: '2026-07-23T06:24:04Z',
+    importanceHigh: false,
+  },
+];
+
+export const RAW_SLACK_MESSAGES: RawSlackMessage[] = [
+  {
+    id: 14,
+    senderLabel: 'Abhinav Ranjan',
+    text: 'Any feedback on the new Vendor Agreement workflow?',
+    sentAtIso: '2026-07-24T00:38:26Z',
+    isDirectMessage: false,
+  },
+  {
+    id: 15,
+    senderLabel: 'Sanketa Patel',
+    text: 'Running a bit late for the Astra call',
+    sentAtIso: '2026-07-23T14:53:30Z',
+    isDirectMessage: true,
+    reasonIfP1: undefined,
+  },
+];
