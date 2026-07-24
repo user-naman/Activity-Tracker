@@ -1,0 +1,35 @@
+/* Astra Design System — global CSS entry point (order matters). */
+@import "./tokens/fonts.css";
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/shape.css";
+@import "./tokens/motion.css";
+@import "./tokens/recipes.css";
+
+/* App reset — mirrors Daily Radar.dc.html <helmet> rules. */
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg-page-tint);
+}
+#root {
+  height: 100%;
+}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+a {
+  color: var(--blue-600);
+}
+a:hover {
+  color: var(--blue-700);
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}

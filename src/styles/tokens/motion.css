@@ -1,0 +1,27 @@
+/* ============================================================
+   Astra Design System — Motion tokens
+   Quiet and quick: 200ms ease-out interaction, 300ms layout,
+   2s pulse skeletons, charts grow on mount.
+   ============================================================ */
+
+:root {
+  --duration-fast: 150ms; /* @kind other */
+  --duration-default: 200ms; /* @kind other */
+  --duration-slow: 300ms; /* @kind other */
+  --ease-in: cubic-bezier(0.4, 0, 1, 1); /* @kind other */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+  --transition-interactive: color var(--duration-default) var(--ease-out),
+    background-color var(--duration-default) var(--ease-out),
+    border-color var(--duration-default) var(--ease-out),
+    box-shadow var(--duration-default) var(--ease-out),
+    opacity var(--duration-default) var(--ease-out);
+  --transition-sidebar: all var(--duration-slow) var(--ease-in-out);
+  --animate-skeleton: astra-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; /* @kind other */
+  --animate-spin: astra-spin 1s linear infinite; /* @kind other */
+}
+
+@keyframes astra-pulse { 50% { opacity: 0.5; } }
+@keyframes astra-spin { to { transform: rotate(360deg); } }
+@keyframes astra-accordion-down { from { height: 0; } }
+@keyframes astra-accordion-up { to { height: 0; } }

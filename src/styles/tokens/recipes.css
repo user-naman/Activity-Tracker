@@ -1,0 +1,206 @@
+/* ============================================================
+   Astra Design System — Component recipes
+   Canonical CSS classes used by the React components.
+   All values trace back to the live audit / theme.css.
+   ============================================================ */
+
+/* ---------- Buttons ---------- */
+.astra-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  white-space: nowrap; border: none; cursor: pointer; outline: none;
+  font: var(--text-label-sm); letter-spacing: var(--tracking-label-sm);
+  font-family: var(--font-sans);
+  border-radius: var(--radius-10);
+  transition: var(--transition-interactive);
+}
+.astra-btn:focus-visible { box-shadow: 0 0 0 2px rgba(10, 186, 181, 0.4); }
+.astra-btn--md { height: var(--h-control-lg); padding: 0 14px; }
+.astra-btn--sm { height: var(--h-control-md); padding: 0 12px; }
+.astra-btn--primary { background: var(--navy-800); color: var(--text-on-dark); }
+.astra-btn--primary:hover { background: var(--navy-950); }
+.astra-btn--secondary { background: var(--surface); color: var(--slate-700); box-shadow: var(--shadow-control); }
+.astra-btn--secondary:hover { background: var(--bg-weak); }
+.astra-btn--ghost { background: transparent; color: var(--slate-700); }
+.astra-btn--ghost:hover { background: var(--bg-weak); }
+.astra-btn--on-dark-ghost { background: var(--alpha-white-16); color: var(--text-on-dark); }
+.astra-btn--on-dark-ghost:hover { background: var(--alpha-white-24); }
+.astra-btn--ai {
+  border: 1px solid transparent; border-radius: var(--radius-xl);
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--ai-gradient) border-box;
+  color: var(--text-strong);
+}
+.astra-btn--ai:hover { box-shadow: var(--ai-glow); }
+.astra-btn--teal-icon {
+  width: 36px; height: 36px; padding: 0; border-radius: var(--radius-full);
+  background: var(--brand-500); color: #fff; box-shadow: 0 0 0 2px var(--navy-800);
+}
+.astra-btn--teal-icon:hover { background: var(--brand-600); }
+.astra-btn--text { background: transparent; color: var(--slate-700); padding: 0 4px; height: auto; }
+.astra-btn--text:hover { color: var(--text-strong); }
+.astra-btn:disabled, .astra-btn--disabled {
+  background: var(--bg-weak); color: var(--text-disabled);
+  box-shadow: none; pointer-events: none;
+}
+.astra-icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border: none; cursor: pointer;
+  border-radius: var(--radius-10); transition: var(--transition-interactive);
+  background: var(--surface); color: var(--slate-700); box-shadow: var(--shadow-control);
+}
+.astra-icon-btn:hover { background: var(--bg-weak); }
+.astra-icon-btn--on-dark { background: var(--alpha-white-16); color: var(--text-on-dark); box-shadow: none; }
+.astra-icon-btn--on-dark:hover { background: var(--alpha-white-24); }
+
+/* ---------- AI gradient border (double-background technique) ---------- */
+.astra-ai-border {
+  border: 1.5px solid transparent;
+  background: linear-gradient(var(--surface), var(--surface)) padding-box, var(--ai-gradient) border-box;
+}
+.astra-ai-border--thin { border-width: 1px; }
+
+/* ---------- Inputs ---------- */
+.astra-input-shell {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border-radius: var(--radius-10);
+  padding: 0 12px; box-shadow: var(--shadow-control);
+  transition: var(--transition-interactive);
+  height: var(--h-control-lg);
+}
+.astra-input-shell--sm { height: var(--h-control-md); }
+.astra-input-shell:focus-within { box-shadow: var(--shadow-control-focus); }
+.astra-input-shell input, .astra-input-shell select, .astra-input-shell textarea {
+  width: 100%; border: none; outline: none; background: transparent;
+  font: var(--text-paragraph-sm); letter-spacing: var(--tracking-label-sm);
+  font-family: var(--font-sans); color: var(--text-strong);
+}
+.astra-input-shell input::placeholder, .astra-input-shell textarea::placeholder { color: var(--text-placeholder); }
+.astra-field-label {
+  font: var(--text-label-sm); letter-spacing: var(--tracking-label-sm);
+  color: var(--gray-600); display: block;
+}
+.astra-field-label em { color: var(--red-500); font-style: normal; }
+
+/* ---------- Badges & chips ---------- */
+.astra-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font: var(--text-label-xs); font-family: var(--font-sans);
+  padding: 2px 8px; border-radius: var(--radius-full);
+}
+.astra-pill--danger { background: var(--status-danger-bg); color: var(--status-danger-fg); }
+.astra-pill--warning { background: var(--status-warning-bg); color: var(--status-warning-fg); }
+.astra-pill--info { background: var(--status-info-bg); color: var(--status-info-fg); }
+.astra-pill--success { background: var(--status-success-bg); color: var(--status-success-fg); }
+.astra-pill--neutral { background: var(--bg-weak); color: var(--slate-700); }
+.astra-pill--count { background: var(--blue-50); color: var(--navy-600); }
+.astra-pill--on-dark-danger { background: rgba(255, 104, 117, 0.16); color: var(--red-400); }
+.astra-pill--on-dark-warning { background: rgba(255, 164, 104, 0.16); color: var(--orange-400); }
+.astra-pill--on-dark-info { background: rgba(104, 149, 255, 0.16); color: var(--blue-400); }
+.astra-pill--on-dark-success { background: rgba(62, 224, 137, 0.16); color: var(--green-400); }
+.astra-pill--on-dark-neutral { background: var(--alpha-white-16); color: var(--text-on-dark); }
+.astra-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: var(--text-label-xs); font-family: var(--font-sans);
+  color: var(--slate-700); background: var(--surface);
+  padding: 2px 8px; border-radius: var(--radius-md);
+  box-shadow: var(--shadow-ring-soft);
+}
+.astra-chip--on-dark { background: var(--alpha-white-16); color: var(--text-on-dark); box-shadow: none; }
+.astra-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.astra-code-chip {
+  font-family: var(--font-mono); font-size: 12px; line-height: 16px;
+  background: var(--gray-100); color: var(--text-strong);
+  padding: 2px 6px; border-radius: var(--radius-sm);
+}
+
+/* ---------- Tabs ---------- */
+.astra-tabs { display: flex; align-items: center; gap: 24px; border-bottom: 1px solid var(--border-slate); }
+.astra-tab {
+  position: relative; border: none; background: none; cursor: pointer;
+  font: var(--text-label-sm); letter-spacing: 0.01em; font-family: var(--font-sans);
+  color: var(--slate-700); padding: 14px 0;
+  transition: var(--transition-interactive);
+}
+.astra-tab:hover { color: var(--text-strong); }
+.astra-tab--active { font-weight: 600; color: var(--text-strong); box-shadow: inset 0 -2px 0 var(--navy-950); }
+
+/* ---------- Segmented control ---------- */
+.astra-seg {
+  display: inline-flex; align-items: center; gap: 2px;
+  background: var(--surface); border-radius: var(--radius-lg);
+  padding: 2px; box-shadow: var(--shadow-control);
+}
+.astra-seg button {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: var(--h-control-sm); padding: 0 12px;
+  border: none; background: transparent; cursor: pointer;
+  font: var(--text-label-xs); font-size: 13px; font-family: var(--font-sans);
+  color: var(--slate-700); border-radius: var(--radius-md);
+  transition: var(--transition-interactive);
+}
+.astra-seg button:hover { background: var(--bg-weak); }
+.astra-seg button.astra-seg--on { background: var(--navy-800); color: var(--text-on-dark); }
+.astra-seg button.astra-seg--on:hover { background: var(--navy-800); }
+
+/* ---------- Cards ---------- */
+.astra-card { background: var(--surface); border-radius: var(--radius-10); padding: var(--pad-card); }
+.astra-card--ring { box-shadow: var(--shadow-control); }
+
+/* ---------- Table ---------- */
+.astra-table { width: 100%; border-collapse: collapse; font: var(--text-paragraph-sm); font-family: var(--font-sans); }
+.astra-table thead th {
+  background: var(--bg-page-tint); color: var(--slate-700);
+  font: var(--text-label-sm); letter-spacing: var(--tracking-label-sm); font-family: var(--font-sans);
+  text-align: left; padding: 8px 12px;
+}
+.astra-table thead th:first-child { border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
+.astra-table thead th:last-child { border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
+.astra-table thead th.astra-th--dense {
+  font: var(--text-subheading-xs); letter-spacing: var(--tracking-subheading-xs);
+  font-family: var(--font-sans); text-transform: uppercase;
+}
+.astra-table tbody tr {
+  height: var(--h-table-row); cursor: pointer;
+  border-bottom: 1px solid var(--slate-100);
+  transition: background-color var(--duration-default) var(--ease-out);
+}
+.astra-table tbody tr:hover { background: var(--bg-weak); }
+.astra-table tbody td { padding: 0 12px; color: var(--text-strong); }
+
+/* ---------- Sidebar nav ---------- */
+.astra-nav-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  border: none; cursor: pointer; text-align: left;
+  background: transparent;
+  color: var(--text-on-dark-muted);
+  font: 400 .875rem/1.25rem var(--font-sans);
+  padding: var(--pad-nav-item); border-radius: var(--radius-lg);
+  margin-bottom: 2px;
+  transition: var(--transition-interactive);
+}
+.astra-nav-item:hover { background: var(--bg-sidebar-hover); }
+.astra-nav-item--active {
+  background: var(--bg-sidebar-active);
+  box-shadow: inset 0 0 0 1px var(--border-sidebar-active);
+  font-weight: 500;
+}
+.astra-nav-sub {
+  display: flex; align-items: center; width: 100%;
+  border: none; cursor: pointer; text-align: left; background: transparent;
+  color: var(--text-on-dark-muted);
+  font: 400 .875rem/1.25rem var(--font-sans);
+  padding: var(--pad-nav-sub);
+  transition: var(--transition-interactive);
+}
+.astra-nav-sub:hover { color: var(--text-on-dark); }
+.astra-nav-sub--active { color: var(--brand-500); }
+
+/* ---------- Skeleton ---------- */
+.astra-skeleton {
+  background: var(--bg-weak); border-radius: var(--radius-10);
+  animation: var(--animate-skeleton);
+}
+
+/* ---------- Scrollbars (thin, light) ---------- */
+.astra-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.astra-scroll::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 4px; }
+.astra-scroll::-webkit-scrollbar-track { background: transparent; }

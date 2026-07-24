@@ -1,0 +1,126 @@
+/* ============================================================
+   Astra Design System — Color tokens
+   Source of truth: src/theme.css from the canonical package
+   (live audit of sandbox.demovalorant.com, June 2026).
+   ============================================================ */
+
+:root {
+  /* ---------- Palette: Valorant Navy (primary neutral-dark) ---------- */
+  --navy-50: #dde5ec; --navy-100: #bdccdb; --navy-200: #9cb3ca; --navy-300: #7a9ab9;
+  --navy-400: #597fa9; --navy-500: #46668a; --navy-600: #344d6a; --navy-700: #243449;
+  --navy-800: #131c28; --navy-900: #101620; --navy-950: #0d1018;
+
+  /* ---------- Palette: Brand Teal (brand & AI accents ONLY) ---------- */
+  --brand-50: #e7f8f8; --brand-100: #b3eae8; --brand-200: #8edfdd; --brand-300: #5bd1cd;
+  --brand-400: #3bc8c4; --brand-500: #0abab5; --brand-600: #09a9a5; --brand-700: #078481;
+  --brand-800: #066664; --brand-900: #044e4c; --brand-950: #023737;
+
+  /* ---------- Palette: Blue ---------- */
+  --blue-50: #eaf1ff; --blue-100: #d5e2ff; --blue-200: #c0d5ff; --blue-300: #97baff;
+  --blue-400: #6895ff; --blue-500: #335cff; --blue-600: #3559e9; --blue-700: #2547d0;
+  --blue-800: #1f3bad; --blue-900: #182f8b; --blue-950: #122368;
+
+  /* ---------- Palette: Sky ---------- */
+  --sky-50: #eaf8ff; --sky-100: #d5f1ff; --sky-200: #c0eaff; --sky-300: #97dcff;
+  --sky-400: #68cdff; --sky-500: #47c2ff; --sky-600: #35ade9; --sky-700: #2597d0;
+  --sky-800: #1f7ead; --sky-900: #18658b; --sky-950: #124b68;
+
+  /* ---------- Palette: Green ---------- */
+  --green-50: #e0faec; --green-100: #cffbe8; --green-200: #c2f5da; --green-300: #84ebb4;
+  --green-400: #3ee089; --green-500: #1fc16b; --green-600: #1daf61; --green-700: #178c4e;
+  --green-800: #1a7544; --green-900: #16643b; --green-950: #0b4627;
+
+  /* ---------- Palette: Red ---------- */
+  --red-50: #ffeaeb; --red-100: #ffd5d8; --red-200: #ffc0c5; --red-300: #ff97a0;
+  --red-400: #ff6875; --red-500: #fa3748; --red-600: #e93544; --red-700: #d02533;
+  --red-800: #ad1f2b; --red-900: #8b1822; --red-950: #681219;
+
+  /* ---------- Palette: Orange ---------- */
+  --orange-50: #fff3eb; --orange-100: #ffe6d5; --orange-200: #ffd9c0; --orange-300: #ffc197;
+  --orange-400: #ffa468; --orange-500: #fa7319; --orange-600: #e16614; --orange-700: #ce5e12;
+  --orange-800: #b75310; --orange-900: #96440d; --orange-950: #71330a;
+
+  /* ---------- Palette: Yellow ---------- */
+  --yellow-50: #fff9ea; --yellow-100: #ffefcc; --yellow-200: #ffecc0; --yellow-300: #ffe097;
+  --yellow-400: #ffd268; --yellow-500: #f5b41d; --yellow-600: #e5a819; --yellow-700: #c99a2c;
+  --yellow-800: #a78025; --yellow-900: #86661d; --yellow-950: #624c18;
+
+  /* ---------- Palette: Purple ---------- */
+  --purple-50: #eeeaff; --purple-100: #dcd5ff; --purple-200: #cac0ff; --purple-300: #a897ff;
+  --purple-400: #8c71f6; --purple-500: #7d52f3; --purple-600: #693ee0; --purple-700: #5b2cc9;
+  --purple-800: #4c25a7; --purple-900: #3d1d86; --purple-950: #341975;
+
+  /* ---------- Palette: Pink ---------- */
+  --pink-50: #ffeaf4; --pink-100: #ffd5ea; --pink-200: #ffc0df; --pink-300: #ff97cb;
+  --pink-400: #ff68b3; --pink-500: #fb4ba3; --pink-600: #e9358f; --pink-700: #d0257a;
+  --pink-800: #ad1f66; --pink-900: #8b1852; --pink-950: #68123d;
+
+  /* ---------- Palette: Neutral Gray (rings, disabled, placeholders) ---------- */
+  --gray-0: #ffffff; --gray-50: #f7f7f7; --gray-100: #f5f5f5; --gray-200: #ebebeb;
+  --gray-300: #d1d1d1; --gray-400: #a3a3a3; --gray-500: #7a7a7a; --gray-600: #2b303b;
+  --gray-700: #333333; --gray-800: #262626; --gray-900: #1c1c1c; --gray-950: #131c28;
+
+  /* ---------- Palette: Neutral Slate (soft text, weak bg, gridlines) ---------- */
+  --slate-0: #ffffff; --slate-50: #f5f7f9; --slate-100: #f2f5f8; --slate-200: #e1e4ea;
+  --slate-300: #c9cfd8; --slate-400: #99a0ad; --slate-500: #717784; --slate-600: #525866;
+  --slate-700: #2b303a; --slate-800: #222530; --slate-900: #181b25; --slate-950: #0d111b;
+
+  /* ---------- Alpha overlays (10% / 16% / 24%) ---------- */
+  --alpha-navy-10: #131c2819;  --alpha-navy-16: #131c2828;  --alpha-navy-24: #131c283d;
+  --alpha-brand-10: #0abab519; --alpha-brand-16: #0abab528; --alpha-brand-24: #0abab53d;
+  --alpha-blue-10: #476cff19;  --alpha-blue-16: #476cff28;  --alpha-blue-24: #476cff3d;
+  --alpha-green-10: #1fc16b19; --alpha-green-16: #1fc16b28; --alpha-green-24: #1fc16b3d;
+  --alpha-red-10: #fb374819;   --alpha-red-16: #fb374828;   --alpha-red-24: #fb37483d;
+  --alpha-orange-10: #fa731919;--alpha-orange-16: #fa731928;--alpha-orange-24: #fa73193d;
+  --alpha-purple-10: #784def19;--alpha-purple-16: #784def28;--alpha-purple-24: #784def3d;
+  --alpha-pink-10: #fb4ba319;  --alpha-pink-16: #fb4ba328;  --alpha-pink-24: #fb4ba33d;
+  --alpha-gray-10: #a3a3a319;  --alpha-gray-16: #a3a3a328;  --alpha-gray-24: #a3a3a33d;
+  --alpha-white-16: rgba(252, 254, 255, 0.16);
+  --alpha-white-24: rgba(252, 254, 255, 0.24);
+
+  /* ---------- Semantic: text ---------- */
+  --text-strong: var(--navy-800);       /* primary text #131c28 — canonical everywhere */
+  --text-sub: var(--gray-600);          /* secondary #2b303b */
+  --text-soft: var(--slate-500);        /* tertiary / captions #717784 */
+  --text-disabled: var(--gray-300);     /* #d1d1d1 */
+  --text-placeholder: var(--gray-400);  /* #a3a3a3 */
+  --text-on-dark: #fcfeff;
+  --text-on-dark-muted: var(--gray-200);
+  --text-link: var(--blue-950);
+  --text-positive: var(--green-500);
+  --text-negative: var(--red-500);
+
+  /* ---------- Semantic: backgrounds ---------- */
+  --bg-app-frame: var(--navy-800);      /* sidebar + window frame */
+  --bg-page-tint: var(--navy-50);       /* page/header tint #dde5ec + table headers */
+  --surface: #fcfeff;                   /* default card/control surface — NEVER pure white */
+  --surface-pure: #ffffff;
+  --bg-weak: var(--slate-50);           /* hover rows, skeletons */
+  --bg-sidebar-active: rgba(36, 52, 73, 0.24);
+  --bg-sidebar-hover: rgba(36, 52, 73, 0.4);
+  --bg-brand-active: rgba(10, 186, 181, 0.098); /* settings sub-nav active */
+
+  /* ---------- Semantic: borders ---------- */
+  --border-soft: var(--gray-200);       /* #ebebeb — rings on controls/cards */
+  --border-slate: var(--slate-200);     /* #e1e4ea — icon tiles, gridlines */
+  --border-sidebar-active: var(--navy-600);
+
+  /* ---------- Status (50-tint bg + 500 fg pairs) ---------- */
+  --status-success-fg: var(--green-500);  --status-success-bg: var(--green-50);
+  --status-warning-fg: var(--orange-500); --status-warning-bg: var(--orange-50);
+  --status-danger-fg: var(--red-500);     --status-danger-bg: var(--red-50);
+  --status-info-fg: var(--blue-500);      --status-info-bg: var(--blue-50);
+
+  /* ---------- AI / brand accents ---------- */
+  --ai-gradient: linear-gradient(90deg, #8b4fd9 0%, #ffc197 50%, #5bd1cd 100%); /* @kind color */
+  --ai-glow: 0 0 15px 2px #e3e4fc, 0 10px 10px -5px rgba(205, 255, 254, 0.7);
+  --ai-card-border-orange: #f1bb97;
+  --ai-card-border-blue: #a1b2f3;
+  --ai-card-border-purple: #bfaeee;
+
+  /* ---------- Chart palette (sequential, dark → light) ---------- */
+  --chart-1: #131c28; --chart-2: #344d6a; --chart-3: #597fa9;
+  --chart-4: #7a9ab9; --chart-5: #9cb3ca; --chart-6: #c0d5ff;
+  --chart-gridline: var(--slate-200);
+  --chart-axis-label: var(--slate-500);
+}

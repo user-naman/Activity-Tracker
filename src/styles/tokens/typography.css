@@ -1,0 +1,45 @@
+/* ============================================================
+   Astra Design System — Typography tokens
+   Inter, negative tracking on everything ≥14px.
+   Weight 500 headings; 600 only page titles & active tabs.
+   ============================================================ */
+
+:root {
+  --font-sans: Inter, "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* ---------- Type scale (AlignUI-style) — font shorthand values ---------- */
+  --text-title-h2: 500 3rem/3.5rem var(--font-sans);      /* 48/56  ls -.01em */
+  --text-title-h3: 500 2.5rem/3rem var(--font-sans);      /* 40/48  ls -.01em — hero greeting */
+  --text-title-h4: 500 2rem/2.5rem var(--font-sans);      /* 32/40  ls -.005em — KPI numbers */
+  --text-title-h5: 500 1.5rem/2rem var(--font-sans);      /* 24/32 */
+  --text-title-h6: 500 1.25rem/1.75rem var(--font-sans);  /* 20/28 — detail titles */
+  --text-label-lg: 500 1.125rem/1.5rem var(--font-sans);  /* 18/24  ls -.015em */
+  --text-label-md: 500 1rem/1.5rem var(--font-sans);      /* 16/24  ls -.011em */
+  --text-label-sm: 500 .875rem/1.25rem var(--font-sans);  /* 14/20  ls -.006em — buttons, table headers */
+  --text-label-xs: 500 .75rem/1rem var(--font-sans);      /* 12/16 — chips, badges */
+  --text-paragraph-lg: 400 1.125rem/1.5rem var(--font-sans);
+  --text-paragraph-md: 400 1rem/1.5rem var(--font-sans);
+  --text-paragraph-sm: 400 .875rem/1.25rem var(--font-sans); /* body copy, inputs */
+  --text-paragraph-xs: 400 .75rem/1rem var(--font-sans);     /* captions, microcopy */
+  --text-subheading-xs: 500 .75rem/1rem var(--font-sans);    /* ls .04em, UPPERCASE */
+  --text-subheading-2xs: 500 .6875rem/.75rem var(--font-sans); /* ls .02em */
+
+  /* ---------- Letter spacing companions ---------- */
+  --tracking-h2: -0.01em;
+  --tracking-h3: -0.01em;
+  --tracking-h4: -0.005em;
+  --tracking-label-lg: -0.015em;
+  --tracking-label-md: -0.011em;
+  --tracking-label-sm: -0.006em;
+  --tracking-subheading-xs: 0.04em;
+  --tracking-subheading-2xs: 0.02em;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--text-strong, #131c28);
+  -webkit-font-smoothing: antialiased;
+}

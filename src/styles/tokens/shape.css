@@ -1,0 +1,49 @@
+/* ============================================================
+   Astra Design System — Shape, depth, spacing tokens
+   Depth is ring-based: 1px #EBEBEB inset + hairline shadow.
+   Real shadows are reserved for AI moments.
+   ============================================================ */
+
+:root {
+  /* ---------- Radius ---------- */
+  --radius-sm: 4px;    /* mono/code chips */
+  --radius-md: 6px;    /* status chips, segmented-active */
+  --radius-lg: 8px;    /* nav items, table header cells */
+  --radius-10: 10px;   /* SIGNATURE: buttons, inputs, cards */
+  --radius-xl: 12px;   /* banners, Ask-Astra, empty states */
+  --radius-2xl: 16px;
+  --radius-20: 20px;   /* AI suggestion cards, composer, RFX cards */
+  --radius-full: 9999px;
+
+  /* ---------- Spacing / sizing (4px base unit) ---------- */
+  --spacing: 4px;
+  --h-control-sm: 28px;   /* segmented active */
+  --h-control-md: 36px;   /* secondary buttons, search */
+  --h-control-lg: 40px;   /* primary buttons, inputs/selects */
+  --h-table-row: 64px;
+  --pad-chip: 2px 8px;
+  --pad-nav-item: 8px 12px;
+  --pad-nav-sub: 8px 18px;
+  --pad-card: 14px 16px;
+  --pad-card-ai: 24px;
+  --pad-page: 0 32px 24px;
+  --pad-detail-header: 20px 32px;
+  --w-sidebar: 240px;
+  --w-sidebar-rail: 56px;
+
+  /* ---------- Shadows (ring-based depth) ---------- */
+  --shadow-ring-soft: inset 0 0 0 1px var(--border-soft);
+  --shadow-ring-slate: inset 0 0 0 1px var(--border-slate);
+  --shadow-xs: 0 1px 2px rgba(10, 13, 20, 0.03);
+  --shadow-control: inset 0 0 0 1px #ebebeb, 0 1px 2px rgba(10, 13, 20, 0.03);
+  --shadow-control-focus: inset 0 0 0 1px #0abab5, 0 1px 2px rgba(10, 13, 20, 0.03);
+  --shadow-card: 0 2px 4px rgba(28, 28, 28, 0.04);          /* large selection/RFX cards */
+  --shadow-suggestion-orange: 0 16px 32px -6px rgba(255, 127, 37, 0.10);
+  --shadow-suggestion-blue: 0 16px 32px -6px rgba(62, 103, 255, 0.10);
+  --shadow-suggestion-purple: 0 16px 32px -6px rgba(127, 84, 246, 0.10);
+  --shadow-fab: 0 8px 24px rgba(10, 186, 181, 0.4);
+
+  /* ---------- Blur ---------- */
+  --blur-sm: 8px;
+  --blur-md: 12px;
+}

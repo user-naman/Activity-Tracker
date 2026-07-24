@@ -1,0 +1,13 @@
+/* ============================================================
+   Astra Design System — Webfonts
+   Inter variable font (latin), self-hosted from Google Fonts v20.
+   The product self-hosts Inter via next/font; this is the same face.
+   ============================================================ */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../assets/fonts/InterVariable.woff2") format("woff2");
+}
