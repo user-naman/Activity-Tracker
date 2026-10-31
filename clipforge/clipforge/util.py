@@ -18,8 +18,14 @@ def log(msg: str) -> None:
     print(f"› {msg}", file=sys.stderr, flush=True)
 
 
+def which(name: str) -> str | None:
+    """PATH lookup that also finds tools installed in our own venv when it isn't activated."""
+    local = Path(sys.executable).parent / name
+    return shutil.which(name) or (str(local) if local.exists() else None)
+
+
 def require_bin(name: str) -> str:
-    path = shutil.which(name)
+    path = which(name)
     if not path:
         raise ClipForgeError(f"'{name}' not found on PATH. Install it first (see README).")
     return path

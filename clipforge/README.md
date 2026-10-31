@@ -26,21 +26,15 @@ These edits are what make a clip transformative instead of a raw re-upload.
 
 ## 1. Install (10 min, once)
 
-You need **Python 3.11+** and **ffmpeg**.
+On a Mac or Linux, in the `clipforge` folder:
 
 ```bash
-# macOS
-brew install python ffmpeg
-# Windows: winget install Gyan.FFmpeg Python.Python.3.12
+./setup.sh
 ```
 
-```bash
-cd clipforge
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[download,dev]"
-clipforge init            # creates clipforge.toml
-clipforge doctor          # checks everything
-```
+It installs ffmpeg and Python if they're missing (via Homebrew on a Mac). It also creates `clipforge.toml` and runs `clipforge doctor`.
+
+Start each work session with `source .venv/bin/activate`.
 
 Optional, for smarter moment picks: `export ANTHROPIC_API_KEY=...`. Without it, the free local picker runs.
 

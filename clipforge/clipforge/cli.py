@@ -12,7 +12,7 @@ from pathlib import Path
 
 from . import config as config_mod
 from .db import DB
-from .util import ClipForgeError, fmt_ts, log
+from .util import ClipForgeError, fmt_ts, log, which
 
 CAPTION_LIMIT = 2200
 
@@ -245,8 +245,8 @@ def cmd_doctor(args):
     rows = [
         ("config", bool(cfg.path), str(cfg.path or "not found, using defaults (run `clipforge init`)")),
         ("workspace", True, str(cfg.workspace)),
-        ("ffmpeg", bool(shutil.which("ffmpeg")), "required"),
-        ("yt-dlp", bool(shutil.which("yt-dlp")), "optional, only for campaigns that allow URL downloads"),
+        ("ffmpeg", bool(which("ffmpeg")), "required"),
+        ("yt-dlp", bool(which("yt-dlp")), "optional, only for campaigns that allow URL downloads"),
         ("faster-whisper", has("faster_whisper"), "required for transcription"),
         ("opencv", has("cv2"), "face tracking; without it clips use blur layout"),
         ("anthropic creds", bool(os.environ.get("ANTHROPIC_API_KEY") or os.environ.get("ANTHROPIC_AUTH_TOKEN")),
