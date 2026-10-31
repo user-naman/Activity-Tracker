@@ -99,3 +99,48 @@ def test_llm_picker_parses_snaps_and_tags(monkeypatch, tmp_path):
     # second call is served from the on-disk cache: zero API spend
     monkeypatch.setattr(anthropic, "Anthropic", lambda: (_ for _ in ()).throw(AssertionError("API called")))
     assert pick_mod.pick(tr, camp, DEFAULTS["picker"], "Title", tmp_path, mode="llm")[0].hook == "Why you stay broke"
+
+
+def test_windows_schedule_registers_hidden_task(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    from clipforge import cli
+
+    cfg = tmp_path / "it's here" / "clipforge.toml"
+    cfg.parent.mkdir()
+    cfg.write_text(f'workspace = "{(tmp_path / "ws").as_posix()}"\n', encoding="utf-8")
+    seen = {}
+
+    def fake_run(cmd, **kw):
+        seen["cmd"] = cmd
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    assert cli.main(["--config", str(cfg), "schedule", "--every", "20"]) == 0
+
+    exe, *_, script = seen["cmd"]
+    assert exe == "powershell"
+    assert "Register-ScheduledTask -TaskName 'ClipForge Post'" in script
+    assert "New-TimeSpan -Minutes 20" in script
+    assert "it''s here" in script          # single quotes escaped for PowerShell
+    assert "--log" in script and " post'" in script
+
+    assert cli.main(["--config", str(cfg), "schedule", "--remove"]) == 0
+    assert "Unregister-ScheduledTask" in seen["cmd"][-1]
+
+
+def test_log_flag_writes_utf8_file(tmp_path, monkeypatch):
+    import sys
+
+    from clipforge import cli
+
+    cfg = tmp_path / "c.toml"
+    cfg.write_text(f'workspace = "{(tmp_path / "ws").as_posix()}"\n', encoding="utf-8")
+    log = tmp_path / "post.log"
+    monkeypatch.setattr(sys, "stdout", sys.stdout)
+    monkeypatch.setattr(sys, "stderr", sys.stderr)
+    cli.main(["--config", str(cfg), "--log", str(log), "doctor"])
+    sys.stdout.flush()
+    assert "✓ ffmpeg" in log.read_text(encoding="utf-8") or "✗ ffmpeg" in log.read_text(encoding="utf-8")

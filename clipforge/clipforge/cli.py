@@ -73,6 +73,7 @@ def cmd_init(args):
     dest = Path(args.path or "clipforge.toml")
     if dest.exists():
         raise ClipForgeError(f"{dest} already exists")
+    dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(Path(__file__).parent / "clipforge.example.toml", dest)
     print(f"Created {dest}. Edit your campaigns, then run: clipforge doctor")
 
@@ -231,6 +232,71 @@ def cmd_list(args):
         print(f"#{s['id']:<4} {s['campaign']:<14} {(s['title'] or '')[:44]:<44} {summary}")
 
 
+TASK_NAME = "ClipForge Post"
+
+
+def _ps_quote(s: str) -> str:
+    return "'" + s.replace("'", "''") + "'"
+
+
+def windows_task_script(pythonw: Path, config: Path, log_file: Path, every_min: int) -> str:
+    """PowerShell that registers a hidden (pythonw, no console flash) repeating task for this user."""
+    argument = f'-m clipforge --config "{config}" --log "{log_file}" post'
+    return "; ".join([
+        f"$a = New-ScheduledTaskAction -Execute {_ps_quote(str(pythonw))} -Argument {_ps_quote(argument)}"
+        f" -WorkingDirectory {_ps_quote(str(config.parent))}",
+        f"$t = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1)"
+        f" -RepetitionInterval (New-TimeSpan -Minutes {every_min})",
+        "$s = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries"
+        " -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 20)",
+        f"Register-ScheduledTask -TaskName {_ps_quote(TASK_NAME)} -Action $a -Trigger $t -Settings $s -Force | Out-Null",
+    ])
+
+
+def cmd_schedule(args):
+    import subprocess
+    cfg, _ = _ctx(args)
+    if not cfg.path:
+        raise ClipForgeError("No clipforge.toml found. Run `clipforge init` first.")
+    log_file = cfg.workspace / "post.log"
+
+    if sys.platform == "win32":
+        if args.remove:
+            script = f"Unregister-ScheduledTask -TaskName {_ps_quote(TASK_NAME)} -Confirm:$false"
+        else:
+            pythonw = Path(sys.executable).with_name("pythonw.exe")
+            script = windows_task_script(pythonw if pythonw.exists() else Path(sys.executable),
+                                         cfg.path, log_file, args.every)
+        proc = subprocess.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", script],
+                              capture_output=True, text=True, encoding="utf-8", errors="replace")
+        if proc.returncode != 0:
+            raise ClipForgeError(f"Task Scheduler said: {proc.stderr.strip()[-400:]}")
+        if args.remove:
+            print("Auto-posting turned off.")
+        else:
+            print(f"Auto-posting on: every {args.every} min while you're signed in. Log: {log_file}")
+            print("Turn off with: clipforge schedule --remove")
+        return
+
+    line = (f"*/{args.every} * * * * {sys.executable} -m clipforge --config '{cfg.path}' "
+            f"--log '{log_file}' post")
+    print("Add this line with `crontab -e`:\n\n" + line)
+
+
+def cmd_edit(args):
+    import subprocess
+    cfg, _ = _ctx(args)
+    if not cfg.path:
+        raise ClipForgeError("No clipforge.toml found. Run `clipforge init` first.")
+    if sys.platform == "win32":
+        subprocess.Popen(["notepad", str(cfg.path)])
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", "-t", str(cfg.path)])
+    else:
+        subprocess.Popen([os.environ.get("EDITOR", "nano"), str(cfg.path)]).wait()
+    print(cfg.path)
+
+
 def cmd_doctor(args):
     cfg, db = _ctx(args)
     ok = lambda b: "✓" if b else "✗"  # noqa: E731
@@ -266,6 +332,7 @@ def cmd_doctor(args):
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="clipforge", description="Campaign videos in, captioned reels out.")
     p.add_argument("--config", help="path to clipforge.toml")
+    p.add_argument("--log", help="append all output to this file (used by scheduled posting)")
     sub = p.add_subparsers(dest="cmd", required=True)
 
     s = sub.add_parser("init", help="create clipforge.toml")
@@ -316,13 +383,32 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--refresh", action="store_true")
     s.set_defaults(fn=cmd_auth)
 
+    s = sub.add_parser("schedule", help="turn on automatic posting (Task Scheduler on Windows)")
+    s.add_argument("--every", type=int, default=30, help="minutes between checks (default 30)")
+    s.add_argument("--remove", action="store_true", help="turn automatic posting off")
+    s.set_defaults(fn=cmd_schedule)
+
+    sub.add_parser("edit", help="open clipforge.toml in a text editor").set_defaults(fn=cmd_edit)
     sub.add_parser("list", help="sources and clip counts").set_defaults(fn=cmd_list)
     sub.add_parser("doctor", help="check your setup").set_defaults(fn=cmd_doctor)
     return p
 
 
+def _setup_output(log_path: str | None) -> None:
+    if log_path:
+        # pythonw (Windows scheduled runs) has no console at all; send everything to the log.
+        f = open(log_path, "a", encoding="utf-8", buffering=1)
+        sys.stdout = sys.stderr = f
+        print(f"\n[{datetime.now().isoformat(timespec='seconds')}]")
+        return
+    for stream in (sys.stdout, sys.stderr):
+        if stream is not None and hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="replace")  # ✓ and “quotes” on any console
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    _setup_output(args.log)
     try:
         args.fn(args)
         return 0

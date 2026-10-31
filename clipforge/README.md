@@ -26,15 +26,18 @@ These edits are what make a clip transformative instead of a raw re-upload.
 
 ## 1. Install (10 min, once)
 
-On a Mac or Linux, in the `clipforge` folder:
+**Windows 10/11:**
 
-```bash
-./setup.sh
-```
+1. Double-click `setup.cmd`. If Windows warns you, click *More info*, then *Run anyway*.
+2. It installs Python and ffmpeg if they're missing, then ClipForge itself.
+3. It creates your config at `C:\Users\<you>\ClipForge\clipforge.toml`.
+4. It adds a `clipforge` command you can use from any PowerShell window.
 
-It installs ffmpeg and Python if they're missing (via Homebrew on a Mac). It also creates `clipforge.toml` and runs `clipforge doctor`.
+Open a **new** PowerShell window afterwards so the command is found.
 
-Start each work session with `source .venv/bin/activate`.
+**Mac / Linux:** run `./setup.sh` in this folder, then `source .venv/bin/activate` each session.
+
+`clipforge edit` opens your config in a text editor.
 
 Optional, for smarter moment picks: `export ANTHROPIC_API_KEY=...`. Without it, the free local picker runs.
 
@@ -103,15 +106,17 @@ clipforge rerender 12 13  # after changing [render] settings
 
 ## 4. Automate posting
 
-`clipforge post` respects `max_posts_per_day` and `min_gap_minutes`. Run it every 30 minutes and it spaces posts out on its own.
-
-macOS / Linux: run `crontab -e`, then add this line:
-
-```
-*/30 9-22 * * * cd /path/to/clipforge && .venv/bin/clipforge post >> post.log 2>&1
+```bash
+clipforge schedule            # turn on auto-posting
+clipforge schedule --remove   # turn it off
 ```
 
-The token refreshes itself weekly. A sleeping laptop just skips slots, and nothing breaks.
+- **On Windows:** this creates a hidden Task Scheduler job. It runs every 30 minutes while you're signed in, with no pop-up windows.
+- **On Mac / Linux:** it prints a line for you to paste into `crontab -e`.
+
+Each run posts at most one approved clip. It follows `max_posts_per_day` and `min_gap_minutes`, so posts spread out on their own. Output goes to `ClipForge/post.log`.
+
+The Instagram token refreshes itself weekly. If the laptop is asleep, it just skips those slots.
 
 ## 5. Connect Instagram (free, once)
 
@@ -176,7 +181,7 @@ Switch models with `picker.model` in `clipforge.toml`.
 
 ```
 clipforge/
-  cli.py         commands
+  cli.py         commands (incl. schedule: Task Scheduler / cron)
   ingest.py      file or permitted URL → workspace
   transcribe.py  faster-whisper, word timestamps, cached
   pick.py        Claude or local heuristics → moments, cached

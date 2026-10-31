@@ -246,11 +246,11 @@ def pick(transcript: dict, campaign: Campaign, cfg: dict, title: str, cache: Pat
     cache_file = cache / f"picks.{mode}.json"
     if cache_file.exists() and not force:
         log(f"picks cached ({mode}); no API call")
-        return [Pick(**p) for p in json.loads(cache_file.read_text())]
+        return [Pick(**p) for p in json.loads(cache_file.read_text(encoding="utf-8"))]
 
     picks = pick_llm(transcript, campaign, cfg, title) if mode == "llm" else pick_local(transcript, campaign, cfg)
     if not picks:
         raise ClipForgeError("No usable moments found. Try a lower min_seconds or the other --mode.")
-    cache_file.write_text(json.dumps([asdict(p) for p in picks], indent=2, ensure_ascii=False))
+    cache_file.write_text(json.dumps([asdict(p) for p in picks], indent=2, ensure_ascii=False), encoding="utf-8")
     log(f"{len(picks)} moments picked ({mode})")
     return picks

@@ -114,5 +114,5 @@ def find_config(explicit: str | None) -> Path | None:
 
 def load(explicit: str | None = None) -> Config:
     path = find_config(explicit)
-    user = tomllib.loads(path.read_text()) if path else {}
+    user = tomllib.loads(path.read_text(encoding="utf-8")) if path else {}
     return Config(raw=_merge(DEFAULTS, user), path=path)

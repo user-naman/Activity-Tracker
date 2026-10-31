@@ -15,15 +15,15 @@ def transcript_path(source_path: Path) -> Path:
 def load_transcript(source_path: Path) -> dict:
     path = transcript_path(source_path)
     if not path.exists():
-        raise ClipForgeError(f"No transcript yet for {source_path.parent.name}. Run `clipforge transcribe`.")
-    return json.loads(path.read_text())
+        raise ClipForgeError(f"No transcript yet for {source_path.parent.name}. Run `clipforge process <source id>`.")
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
     out = transcript_path(source_path)
     if out.exists() and not force:
         log("transcript cached")
-        return json.loads(out.read_text())
+        return json.loads(out.read_text(encoding="utf-8"))
 
     try:
         from faster_whisper import WhisperModel
@@ -35,13 +35,21 @@ def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
          "-vn", "-ac", "1", "-ar", "16000", str(audio)])
 
     log(f"transcribing with whisper '{cfg['model']}' (first run downloads the model)…")
-    model = WhisperModel(cfg["model"], device=cfg["device"], compute_type=cfg["compute_type"])
-    segments, info = model.transcribe(
-        str(audio),
-        language=cfg.get("language") or None,
-        word_timestamps=True,
-        vad_filter=True,
-    )
+    def _run(device: str):
+        model = WhisperModel(cfg["model"], device=device, compute_type=cfg["compute_type"])
+        segs, inf = model.transcribe(
+            str(audio), language=cfg.get("language") or None, word_timestamps=True, vad_filter=True,
+        )
+        return list(segs), inf  # materialise so GPU/driver errors surface here
+
+    try:
+        segments, info = _run(cfg["device"])
+    except (RuntimeError, OSError) as e:
+        if cfg["device"] == "cpu":
+            raise
+        # Common on Windows laptops: a GPU is visible but CUDA/cuDNN DLLs are missing.
+        log(f"GPU transcription failed ({str(e).splitlines()[0][:80]}); using CPU")
+        segments, info = _run("cpu")
     result = {"language": info.language, "segments": []}
     for seg in segments:
         words = [
@@ -53,7 +61,7 @@ def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
                 "start": round(seg.start, 3), "end": round(seg.end, 3),
                 "text": seg.text.strip(), "words": words,
             })
-    out.write_text(json.dumps(result, ensure_ascii=False))
+    out.write_text(json.dumps(result, ensure_ascii=False), encoding="utf-8")
     audio.unlink(missing_ok=True)
     log(f"transcript: {len(result['segments'])} segments, language={info.language}")
     return result

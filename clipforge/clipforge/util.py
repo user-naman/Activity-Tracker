@@ -20,8 +20,12 @@ def log(msg: str) -> None:
 
 def which(name: str) -> str | None:
     """PATH lookup that also finds tools installed in our own venv when it isn't activated."""
-    local = Path(sys.executable).parent / name
-    return shutil.which(name) or (str(local) if local.exists() else None)
+    if found := shutil.which(name):
+        return found
+    for local in (Path(sys.executable).parent / name, Path(sys.executable).parent / f"{name}.exe"):
+        if local.exists():
+            return str(local)
+    return None
 
 
 def require_bin(name: str) -> str:
@@ -32,7 +36,7 @@ def require_bin(name: str) -> str:
 
 
 def run(cmd: list[str], *, quiet: bool = True) -> str:
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
     if proc.returncode != 0:
         tail = "\n".join(proc.stderr.strip().splitlines()[-15:])
         raise ClipForgeError(f"{Path(cmd[0]).name} failed:\n{tail}")
