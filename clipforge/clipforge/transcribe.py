@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import wave
 from pathlib import Path
 
 from .util import ClipForgeError, log, require_bin, run
@@ -25,6 +27,8 @@ def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
         log("transcript cached")
         return json.loads(out.read_text(encoding="utf-8"))
 
+    os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")  # harmless on Windows, just noisy
+    os.environ.setdefault("HF_HUB_VERBOSITY", "error")
     try:
         from faster_whisper import WhisperModel
     except ImportError as e:
@@ -34,11 +38,14 @@ def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
     run([require_bin("ffmpeg"), "-y", "-v", "error", "-i", str(source_path),
          "-vn", "-ac", "1", "-ar", "16000", str(audio)])
 
+    samples = load_wav(audio)
+
     log(f"transcribing with whisper '{cfg['model']}' (first run downloads the model)…")
+
     def _run(device: str):
         model = WhisperModel(cfg["model"], device=device, compute_type=cfg["compute_type"])
         segs, inf = model.transcribe(
-            str(audio), language=cfg.get("language") or None, word_timestamps=True, vad_filter=True,
+            samples, language=cfg.get("language") or None, word_timestamps=True, vad_filter=True,
         )
         return list(segs), inf  # materialise so GPU/driver errors surface here
 
@@ -65,6 +72,21 @@ def transcribe(source_path: Path, cfg: dict, *, force: bool = False) -> dict:
     audio.unlink(missing_ok=True)
     log(f"transcript: {len(result['segments'])} segments, language={info.language}")
     return result
+
+
+def load_wav(path: Path):
+    """16 kHz mono s16 WAV (made by our ffmpeg call) -> float32 samples.
+
+    Passing samples instead of a path skips faster-whisper's PyAV decoder, whose
+    API changes between versions (e.g. PyAV 15 dropped `metadata_errors`).
+    """
+    import numpy as np
+
+    with wave.open(str(path), "rb") as w:
+        if w.getsampwidth() != 2 or w.getnchannels() != 1:
+            raise ClipForgeError(f"Unexpected audio format in {path.name}")
+        frames = w.readframes(w.getnframes())
+    return np.frombuffer(frames, dtype=np.int16).astype(np.float32) / 32768.0
 
 
 def words_between(transcript: dict, start: float, end: float) -> list[dict]:

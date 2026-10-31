@@ -417,3 +417,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     except KeyboardInterrupt:
         return 130
+    except Exception as e:  # unexpected: keep the console readable, keep details for debugging
+        import traceback
+        report = Path(os.path.expanduser("~/ClipForge/last-error.txt"))
+        report.parent.mkdir(parents=True, exist_ok=True)
+        report.write_text(traceback.format_exc(), encoding="utf-8")
+        print(f"✗ Unexpected error: {type(e).__name__}: {e}\n  Full details: {report}", file=sys.stderr)
+        return 1

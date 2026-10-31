@@ -14,6 +14,11 @@ URL_RE = re.compile(r"^https?://", re.I)
 
 
 def ingest(db: DB, workspace: Path, campaign: Campaign, origin: str, *, i_have_rights: bool = False) -> int:
+    for row in db.sources():
+        if row["origin"] == origin and row["campaign"] == campaign.slug and Path(row["path"]).exists():
+            log(f"already added as source #{row['id']}; reusing it")
+            return row["id"]
+
     staging = workspace / "sources" / "_incoming"
     staging.mkdir(parents=True, exist_ok=True)
 

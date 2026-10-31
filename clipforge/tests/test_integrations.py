@@ -144,3 +144,48 @@ def test_log_flag_writes_utf8_file(tmp_path, monkeypatch):
     cli.main(["--config", str(cfg), "--log", str(log), "doctor"])
     sys.stdout.flush()
     assert "✓ ffmpeg" in log.read_text(encoding="utf-8") or "✗ ffmpeg" in log.read_text(encoding="utf-8")
+
+
+def test_transcribe_feeds_samples_not_path(tmp_path, monkeypatch):
+    """Regression: PyAV 15 broke faster-whisper's own decoder; we must never hand it a path."""
+    import subprocess
+
+    import faster_whisper
+    import numpy as np
+
+    from clipforge.transcribe import transcribe
+
+    src = tmp_path / "source.mp4"
+    subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "sine=frequency=440:duration=3",
+                    "-f", "lavfi", "-i", "color=size=64x64:duration=3", "-shortest", str(src)], check=True)
+    seen = {}
+
+    class FakeModel:
+        def __init__(self, *a, **k):
+            pass
+
+        def transcribe(self, audio, **kw):
+            seen["audio"] = audio
+            word = SimpleNamespace(start=0.1, end=0.5, word=" hi")
+            seg = SimpleNamespace(start=0.1, end=0.5, text=" hi", words=[word])
+            return iter([seg]), SimpleNamespace(language="en")
+
+    monkeypatch.setattr(faster_whisper, "WhisperModel", FakeModel)
+    out = transcribe(src, dict(DEFAULTS["whisper"], device="cpu"))
+
+    assert isinstance(seen["audio"], np.ndarray) and seen["audio"].dtype == np.float32
+    assert abs(len(seen["audio"]) - 3 * 16000) < 1600
+    assert out["segments"][0]["words"][0]["word"] == "hi"
+    assert not (tmp_path / "audio.wav").exists()
+
+
+def test_same_file_is_not_ingested_twice(tmp_path):
+    import subprocess
+
+    from clipforge.ingest import ingest
+
+    src = tmp_path / "v.mp4"
+    subprocess.run(["ffmpeg", "-v", "error", "-f", "lavfi", "-i", "color=size=64x64:duration=1", str(src)], check=True)
+    db = DB(tmp_path / "t.db")
+    camp = Campaign(slug="c", name="C")
+    assert ingest(db, tmp_path / "ws", camp, str(src)) == ingest(db, tmp_path / "ws", camp, str(src))
