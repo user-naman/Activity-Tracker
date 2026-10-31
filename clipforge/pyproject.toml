@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "clipforge"
+version = "0.1.0"
+description = "Campaign videos in, captioned 9:16 reels out. Local, cheap, keyboard-first."
+requires-python = ">=3.11"
+dependencies = [
+    "faster-whisper>=1.0",
+    "opencv-python-headless>=4.8,<5",  # 5.x no longer bundles the face cascade
+    "anthropic>=2.0",
+]
+
+[project.optional-dependencies]
+download = ["yt-dlp"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+clipforge = "clipforge.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["clipforge*"]
+
+[tool.setuptools.package-data]
+clipforge = ["clipforge.example.toml", "review/index.html"]

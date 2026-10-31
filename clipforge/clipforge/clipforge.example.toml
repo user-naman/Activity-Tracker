@@ -1,0 +1,51 @@
+# ClipForge config. This file is the single source of truth.
+# Everything below is optional except at least one [campaigns.*] table.
+
+workspace = "~/ClipForge"          # sources, clips, transcripts, and the database live here
+
+[whisper]
+model = "small"                    # tiny | base | small | medium | large-v3   (bigger = slower, more accurate)
+device = "auto"                    # auto | cpu | cuda
+compute_type = "int8"              # int8 is fast on laptops
+language = ""                      # "" = auto-detect, or e.g. "en"
+
+[picker]
+mode = "auto"                      # auto: Claude if ANTHROPIC_API_KEY is set, else free local heuristics
+model = "claude-opus-5-5"          # "claude-haiku-5-5" is ~40x cheaper per token if you want to squeeze cost
+effort = "low"                     # low | medium | high. Low is plenty for picking moments.
+clips_per_video = 6
+min_seconds = 20
+max_seconds = 59
+
+[render]
+layout = "auto"                    # auto: follow faces, fall back to blur-pad | face | blur | center
+font = "Arial Black"               # any installed font; Montserrat ExtraBold looks great (put .ttf in fonts_dir)
+fonts_dir = ""
+font_size = 84
+accent = "#FFE14D"                 # highlighted word + progress bar
+words_per_chunk = 3
+uppercase = true
+hook_seconds = 3.0                 # on-screen hook title duration
+caption_y = 0.64                   # vertical position (fraction of height), clear of IG's bottom UI
+progress_bar = true
+crf = 20                           # lower = higher quality, bigger file
+preset = "medium"
+
+[instagram]
+graph_host = "graph.instagram.com" # Instagram Login. Use "graph.facebook.com" if you set up via Facebook Login.
+api_version = "v26.0"
+user_id = ""                       # your Instagram professional account ID (or env IG_USER_ID)
+# Token: env IG_ACCESS_TOKEN, or `clipforge auth --token ...` (stored in the workspace DB, auto-refreshed weekly)
+max_posts_per_day = 3              # stay low for the first 2-3 weeks on a new account
+min_gap_minutes = 180
+share_to_feed = true
+
+# One table per campaign you've joined. The slug after "campaigns." is what you pass to -c.
+[campaigns.example]
+name = "Example Podcast"
+cpm = 1.0                          # $ per 1,000 views, from the campaign page
+allow_download = false             # true only if the campaign rules let you pull the source from a URL
+mention = "@examplepodcast"        # required tag, if any
+hashtags = ["podcast", "clips"]
+submit_url = "https://whop.com/"   # where you submit links for payout
+notes = "Focus on business advice moments. No profanity in hooks."
